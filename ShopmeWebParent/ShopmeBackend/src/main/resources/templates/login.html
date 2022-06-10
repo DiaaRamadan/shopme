@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('Login - Shopme admin')" />
+
+<body>
+	<div class="container-fluid text-center">
+
+		<div>
+			<img th:src="@{/images/ShopmeAdminBig.png}" alt="logo" />
+		</div>
+		
+		<div th:if="${param.logout}">
+			<p class="text-warning">You have been logged out</p>
+		</div>
+		
+		<form th:action="@{/login}" method="post" style="max-width: 350px; margin: 0 auto;">
+			
+			<div th:if=${param.error}>
+				<p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+			</div>
+			
+			<div class="border border-secondary p-3">
+				<p>Access to shopme controll panel</p>
+				<p>
+					<input type="email" placeholder="E-mail" name="email" class="form-control" required />
+				</p>
+				
+				<p>
+					<input type="password" name="password" placeholder="Password" class="form-control" required />
+				</p>
+				
+				<p>
+					<input type="checkbox" name="remember-me" /> &nbsp; Remember me
+				</p>
+				
+				<p>
+					<input type="submit" value="Login" class="btn btn-primary" />
+				</p>
+				
+			</div>
+		</form>
+
+		<div th:replace="fragments :: footer" />
+	</div>
+
+	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('Users - Shopme admin')" />
+<body>
+
+	<div th:replace="navigation :: menu" />
+	
+	<div class="container-fluid">
+
+		<div>
+			<h2>Manage users</h2>
+			<a th:href="@{/users/new}" class="fas fa-user-plus fa-2x icon-dark"></a>
+			
+			<a th:href="@{/users/export/csv}" class="fas fa-file-csv fa-2x icon-dark"></a>
+			
+			<a th:href="@{/users/export/excel}" class="fas fa-file-excel fa-2x icon-dark"></a>
+			
+			<a th:href="@{/users/export/pdf}" class="fas fa-file-pdf fa-2x icon-dark"></a>
+		</div>
+
+		<div th:if="${message != null}" class="alert alert-success text-center">
+			[[${message}]]
+		</div>
+		
+		<div th:replace="fragments :: search_form('/users/page/1')" />
+	
+
+		<div>
+			<table class="table table-bordered table-hover table-striped table-responsive">
+				<thead class="thead-dark">
+					<tr>
+						<th th:replace = "fragments :: column_link('/users','id', 'User ID')">
+						<th>Photos</th>
+						<th th:replace = "fragments :: column_link('/users', 'email', 'Email')">
+						<th th:replace = "fragments :: column_link('/users', 'firstName', 'First name')">
+
+						<th th:replace = "fragments :: column_link('/users', 'lastName', 'Last name')">
+						<th>Roles</th>
+						<th th:replace = "fragments :: column_link('/users', 'enabled', 'Enabled')">
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="user : ${usersList}">
+						<td>[[${user.id}]]</td>
+						<td>
+							<i th:if="${user.photos == null}" class="fas fa-portrait fa-3x icon-silver"></i>
+							<img th:if="${user.photos != null}" th:src="@{${user.photosImagePath}}"
+								th:alt="${user.photos}" style="width: 100px;" />
+						</td>
+						<td>[[${user.email}]]</td>
+						<td>[[${user.firstName}]]</td>
+						<td>[[${user.lastName}]]</td>
+						<td>[[${user.roles}]]</td>
+						<td>
+							<a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
+								th:href="@{'/users/' + ${user.id} + '/enabled/false'}" title="Disabled this user"></a>
+							<a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
+								th:href="@{'/users/' + ${user.id} + '/enabled/true'}" title="Enabled this user"></a>
+						</td>
+
+						<td>
+							<a class="fas fa-edit fa-2x icon-green" th:href="@{'/users/edit/' + ${user.id}}"
+								title="Edit this user"></a>
+							&nbsp;
+							<a class="fas fa-trash fa-2x icon-dark delete-link"
+								th:href="@{'/users/delete/' + ${user.id}}" th:userId="${user.id}"
+								title="Delete this user"></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div th:replace="fragments :: pagination('users', 'users')" />
+		<div th:replace="fragments :: footer" />
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade text-center" id="modal-confirm">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modal-title"></h5>
+					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<span id="modal-body"></span>
+				</div>
+				<div class="modal-footer">
+					<a href="" class="btn btn-success" id="yes-btn">Yes</a>
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+	<script>
+		$(document).ready(function (e) {
+			$(".delete-link").click(function (e) {
+				e.preventDefault();
+				const url = $(this).attr('href');
+				const userId = $(this).attr("userId");
+				$("#modal-body").text("Are you sure want delete this user ID (" + userId + " ) ?");
+				$('#yes-btn').attr("href", url);
+				$('#modal-confirm').modal("show");
+			})
+		});
+		
+		$("#clear-search").click(function(e){
+			
+			window.location = "[[@{/users}]]";
+			
+		});
+	</script>
+</body>
+
+</html>

@@ -2,3 +2,32 @@ table thead{
 	background-color: #212529;
     color: #fff;
 }
+
+table tr td{
+	 text-align: center;
+}
+
+form{
+	max-width: 700px;
+	margin: auto;
+}
+
+a{
+	text-decoration: none;
+}
+
+.icon-white{
+	color: white;
+}
+
+.icon-silver{
+	color: silver;
+}
+
+.icon-green{
+	color: green;
+}
+
+.icon-dark{
+	color: gray;
+}

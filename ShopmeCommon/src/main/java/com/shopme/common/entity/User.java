@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "users")
@@ -38,7 +40,7 @@ public class User {
 
 	private boolean enabled;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
@@ -88,7 +90,7 @@ public class User {
 		return lastName;
 	}
 
-	public void setLast_name(String lastName) {
+	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
@@ -119,12 +121,16 @@ public class User {
 	public void addRole(Role role) {
 		roles.add(role);
 	}
+	
+	@Transient
+	public String getPhotosImagePath() {
+		if(null == id || null == photos) return "/images/default-user.png";
+		return "/user-photos/" + id + "/" + photos;
+	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", first_name=" + firstName + ", last_name=" + lastName + "]";
+		return "User [id=" + id + ", first_name=" + firstName + ", last_name=" + lastName + ", email=" + email + ", password="+password+"]";
 	}
-	
-	
-	
+
 }

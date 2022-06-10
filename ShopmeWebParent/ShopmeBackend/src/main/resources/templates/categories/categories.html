@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('Categories - Shopme admin')" />
+<body>
+
+	<div th:replace="navigation :: menu" />
+	
+	<div class="container-fluid">
+
+		<div>
+			<h2>Manage Categories</h2>
+			<a th:href="@{/categories/new}" class="fas fa-folder-plus fa-2x icon-dark"></a>
+			
+			<a th:href="@{/categories/export/csv}" class="fas fa-file-csv fa-2x icon-dark"></a>
+			
+		</div>
+
+		<div th:if="${message != null}" class="alert alert-success text-center">
+			[[${message}]]
+		</div>
+		
+		<div th:replace="fragments :: search_form('/categories/page/1')" />
+
+		<div>
+			<table class="table table-bordered table-hover table-striped table-responsive">
+				<thead class="thead-dark">
+					<tr>
+						<th>ID</th>
+						<th>Image</th>
+						<th th:replace = "fragments :: column_link('/categories','name', 'Category Name')">
+						<th>Alias</th>
+
+						<th th:replace = "fragments :: column_link('/categories','enabled', 'Enabled')">
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="category : ${categories}">
+						<td>[[${category.id}]]</td>
+						<td>
+							<img th:src="@{${category.imagePath}}" alt="category image" style="width: 100px;" class="img-fluid"/>
+						</td>
+						<td>[[${category.name}]]</td>
+						<td>[[${category.alias}]]</td>
+					
+						<td>
+							<a th:if="${category.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
+								th:href="@{'/categories/' + ${category.id} + '/enabled/false'}" title="Disabled this user"></a>
+							<a th:if="${category.enabled == false}" class="fas fa-circle fa-2x icon-dark"
+								th:href="@{'/categories/' + ${category.id} + '/enabled/true'}" title="Enabled this user"></a>
+						</td>
+
+						<td>
+							<a class="fas fa-edit fa-2x icon-green" th:href="@{'/categories/edit/' + ${category.id}}"
+								title="Edit this category"></a>
+							&nbsp;
+							<a class="fas fa-trash fa-2x icon-dark delete-link"
+								th:href="@{'/categories/delete/' + ${category.id}}" th:catId="${category.id}"
+								title="Delete this category"></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	
+		<div th:replace="fragments :: pagination('users', 'top-level categories')" />
+		<div th:replace="fragments :: footer" />
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade text-center" id="modal-confirm">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modal-title"></h5>
+					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<span id="modal-body"></span>
+				</div>
+				<div class="modal-footer">
+					<a href="" class="btn btn-success" id="yes-btn">Yes</a>
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+	<script>
+		$(document).ready(function (e) {
+			$(".delete-link").click(function (e) {
+				e.preventDefault();
+				const url = $(this).attr('href');
+				const catId = $(this).attr("catId");
+				$("#modal-body").text("Are you sure want delete this category ID (" + catId + " ) ?");
+				$('#yes-btn').attr("href", url);
+				$('#modal-confirm').modal("show");
+			})
+		});
+		
+		$("#clear-search").click(function(e){
+			
+			window.location = "[[@{/categories}]]";
+			
+		});
+	</script>
+</body>
+
+</html>
