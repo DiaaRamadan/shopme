@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('Brands - Shopme admin')" />
+<body>
+
+	<div th:replace="navigation :: menu" />
+	
+	<div class="container-fluid">
+
+		<div>
+			<h2>Manage brands</h2>
+			<a th:href="@{/brands/new}" class="fas fa-folder-plus fa-2x icon-dark"></a>
+			
+			<a th:href="@{/brands/export/csv}" class="fas fa-file-csv fa-2x icon-dark"></a>
+			
+		</div>
+
+		<div th:if="${message != null}" class="alert alert-success text-center">
+			[[${message}]]
+		</div>
+		
+		<div th:replace="fragments :: search_form('/brands/page/1')" />
+
+		<div>
+			<table class="table table-bordered table-hover table-striped table-responsive">
+				<thead class="thead-dark">
+					<tr>
+						<th>ID</th>
+						<th>Logo</th>
+						<th th:replace = "fragments :: column_link('/brands','name', 'Brands Name')">
+						<th>Categories</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="brand : ${brands}">
+						<td>[[${brand.id}]]</td>
+						<td>
+							<img th:src="@{${brand.logoPath}}" alt="category image" style="width: 100px;" class="img-fluid"/>
+
+						</td>
+						<td>[[${brand.name}]]</td>
+						<td>
+							<th:block th:each="cat : ${brand.categories}">
+								<span class="badge badge-success" style="background-color: #6c757d; color: #fff;" th:text="${cat.name}"></span>
+							</th:block>
+						</td>
+						<td>
+							<a class="fas fa-edit fa-2x icon-green" th:href="@{'/brands/edit/' + ${brand.id}}"
+								title="Edit this category"></a>
+							&nbsp;
+							<a class="fas fa-trash fa-2x icon-dark delete-link"
+								th:href="@{'/brands/delete/' + ${brand.id}}" th:brandId="${brand.id}"
+								title="Delete this brand"></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	
+		<div th:replace="fragments :: pagination('brands', 'top-level categories')" />
+		<div th:replace="fragments :: footer" />
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade text-center" id="modal-confirm">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modal-title"></h5>
+					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<span id="modal-body"></span>
+				</div>
+				<div class="modal-footer">
+					<a href="" class="btn btn-success" id="yes-btn">Yes</a>
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+	<script>
+		$(document).ready(function (e) {
+			$(".delete-link").click(function (e) {
+				e.preventDefault();
+				const url = $(this).attr('href');
+				const brandId = $(this).attr("brandId");
+				$("#modal-body").text("Are you sure want delete this brand ID (" + brandId + " ) ?");
+				$('#yes-btn').attr("href", url);
+				$('#modal-confirm').modal("show");
+			})
+		});
+		
+		$("#clear-search").click(function(e){
+			
+			window.location = "[[@{/brands}]]";
+			
+		});
+	</script>
+</body>
+
+</html>

@@ -9,6 +9,8 @@
 	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
 	<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.min.css}" />
 	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/richtext/richtext.min.css}" />
+
 </head>
 
 
@@ -35,22 +37,23 @@
 
 
 	<div th:fragment="search_form(moduleUrl)">
-			<form th:action="@{${moduleUrl}}" class="form-inline m-3">
-				<input type="hidden" name="sortField" th:value="${sortField}" />
-				<input type="hidden" name="sortDir" th:value="${sortDir}" />
-				Filter: 
-				&nbsp;
-				<input type="search" th:value="${keyword}" name="keyword" class="form-control" required  style="display: inline; width: 225px"/> 
-				&nbsp;&nbsp;
-				<button type="submit" value="Search" class="btn btn-primary" style="display: inline;"> 
-					<i class="fas fa-search icon-dark text-white"></i>
-				</button> 
-				&nbsp;&nbsp;
-				<button type="button" class="btn btn-secondary" style="display: inline;" id="clear-search"> 
-					<i class="fas fa-eraser text-white"></i>
-				</button> 
-			</form>
-		</div>
+		<form th:action="@{${moduleUrl}}" class="form-inline m-3">
+			<input type="hidden" name="sortField" th:value="${sortField}" />
+			<input type="hidden" name="sortDir" th:value="${sortDir}" />
+			Filter:
+			&nbsp;
+			<input type="search" th:value="${keyword}" name="keyword" class="form-control" required
+				style="display: inline; width: 225px" />
+			&nbsp;&nbsp;
+			<button type="submit" value="Search" class="btn btn-primary" style="display: inline;">
+				<i class="fas fa-search icon-dark text-white"></i>
+			</button>
+			&nbsp;&nbsp;
+			<button type="button" class="btn btn-secondary" style="display: inline;" id="clear-search">
+				<i class="fas fa-eraser text-white"></i>
+			</button>
+		</form>
+	</div>
 
 	<div th:fragment="pagination(moduleUrl, entityName)" th:remove="tag">
 		<div class="text-center m-1" th:if="${totalItems > 0}">

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="page_head(title)">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>[[${title}]]</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/richtext/richtext.min.css}" />
+
+</head>
+
+
+<body>
+
+	<div th:fragment="footer" class="text-center m-3">
+		<p>Shopme control panel - Copyright &copy; shopme </p>
+	</div>
+
+	
+</body>
+
+</html>

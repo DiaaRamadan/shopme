@@ -12,16 +12,22 @@ public class MvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-		var dirName = "user-photos";
-		var userDirPath = Paths.get(dirName);
-		var userPhotoPath = userDirPath.toFile().getAbsolutePath();
-		registry.addResourceHandler("/" + dirName + "/**").addResourceLocations("file:/" + userPhotoPath + "/");
+		registerResourceHandler("user-photos", registry);
+		registerResourceHandler("../brands-images", registry);
+		registerResourceHandler("../category-images", registry);
+		registerResourceHandler("../product-images", registry);
 		
-		var categoryDir = "../category-images";
-		var categoryDirPath = Paths.get(categoryDir);
-		var categoryImagePath = categoryDirPath.toFile().getAbsoluteFile();
-		
-		registry.addResourceHandler("/category-images/**").addResourceLocations("file:/" + categoryImagePath + "/");
 	}
 
+	
+	private void registerResourceHandler(String dirName, ResourceHandlerRegistry registry) {
+		
+		var dirPath = Paths.get(dirName);
+		var photoPath = dirPath.toFile().getAbsolutePath();
+		var logicalPath = dirName.replace("..", "") + "/**";
+		
+		registry.addResourceHandler(logicalPath).addResourceLocations("file:/" + photoPath + "/");
+		
+	}
+	
 }

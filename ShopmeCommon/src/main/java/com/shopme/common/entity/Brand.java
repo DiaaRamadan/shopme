@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "brands")
@@ -20,7 +21,7 @@ public class Brand {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	
 	@Column(length = 45, nullable = false, unique = true)
 	private String name;
@@ -40,11 +41,16 @@ public class Brand {
 		this.logo = logo;
 	}
 	
-	public int getId() {
+	public Brand(Integer id, String name) {
+		this.name = name;
+		this.id = id;
+	}
+	
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -76,5 +82,9 @@ public class Brand {
 		this.categories.add(category);
 	}
 	
-	
+	@Transient
+	public String getLogoPath() {
+		if(this.id == null) return "/images/image-thumbnail.png"; 
+		return "/brands-images/" + this.id + "/" + this.logo;
+	}
 }

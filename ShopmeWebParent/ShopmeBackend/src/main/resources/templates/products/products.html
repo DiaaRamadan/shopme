@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('Products - Shopme admin')" />
+
+<body>
+
+	<div th:replace="navigation :: menu" />
+
+	<div class="container-fluid">
+
+		<div>
+			<h2>Manage Products</h2>
+			<a th:href="@{/products/new}" class="fas fa-folder-plus fa-2x icon-dark"></a>
+
+			<a th:href="@{/products/export/csv}" class="fas fa-file-csv fa-2x icon-dark"></a>
+
+		</div>
+
+		<div th:if="${message != null}" class="alert alert-success text-center">
+			[[${message}]]
+		</div>
+
+		<div th:replace="fragments :: search_form('/products/page/1')" />
+
+		<div>
+			<table class="table table-bordered table-hover table-striped table-responsive">
+				<thead class="thead-dark">
+					<tr>
+						<th th:replace="fragments :: column_link('/products','id', 'ID')">
+						<th>Main image</th>
+						<th th:replace="fragments :: column_link('/products','name', 'Product Name')">
+						<th th:replace="fragments :: column_link('/products','brand', 'Brand')">
+						<th th:replace="fragments :: column_link('/products','category', 'Category')">
+						<th>Enabled</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="product : ${products}">
+						<td>[[${product.id}]]</td>
+						<td>
+							<img th:src="@{${product.mainImagePath}}" alt="category image" style="width: 100px;"
+								class="img-fluid" />
+
+						</td>
+						<td>
+							<a class="link-details" th:href="@{'/products/details/' + ${product.id}}"
+								th:title="${product.name}">
+								[[${product.shortName}]]
+							</a>
+						</td>
+						<td>[[${product.brand.name}]]</td>
+						<td>[[${product.category.name}]]</td>
+						<td>
+							<a th:if="${product.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
+								th:href="@{'/products/' + ${product.id} + '/enabled/false'}"
+								title="Disabled this product"></a>
+							<a th:if="${product.enabled == false || product.enabled == null}"
+								class="fas fa-circle fa-2x icon-dark"
+								th:href="@{'/products/' + ${product.id} + '/enabled/true'}"
+								title="Enabled this product"></a>
+						</td>
+						<td>
+							<a class="fas fa-file-alt fa-2x icon-green link-details"
+								th:href="@{'/products/details/' + ${product.id}}" title="View this product details"></a>
+
+							<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
+								&nbsp;
+								<a class="fas fa-edit fa-2x icon-green" th:href="@{'/products/edit/' + ${product.id}}"
+									title="Edit this product"></a>
+							</th:block>
+							<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+								&nbsp;
+								<a class="fas fa-trash fa-2x icon-dark delete-link"
+									th:href="@{'/products/delete/' + ${product.id}}" th:productId="${product.id}"
+									title="Delete this product"></a>
+							</th:block>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div th:replace="fragments :: pagination('brands', 'products')" />
+		<div th:replace="fragments :: footer" />
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade text-center" id="modal-confirm">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modal-title"></h5>
+					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<span id="modal-body"></span>
+				</div>
+				<div class="modal-footer">
+					<a href="" class="btn btn-success" id="yes-btn">Yes</a>
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal fade text-center" id="modal-details">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modal-title"></h5>
+					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<span id="modal-body"></span>
+				</div>
+				<div class="modal-footer">
+					<a href="" class="btn btn-success" id="yes-btn">Yes</a>
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+	<script>
+		$(document).ready(function (e) {
+			$(".delete-link").click(function (e) {
+				e.preventDefault();
+				const url = $(this).attr('href');
+				const productId = $(this).attr("productId");
+				$("#modal-body").text("Are you sure want delete this brand ID (" + productId + " ) ?");
+				$('#yes-btn').attr("href", url);
+				$('#modal-confirm').modal("show");
+			});
+
+			$("#clear-search").click(function (e) {
+
+				window.location = "[[@{/products}]]";
+
+			});
+
+			$(".link-details").click(function (e) {
+				e.preventDefault();
+				const linkDetail = $(this).attr("href");
+				$('#modal-details').modal("show").find(".modal-content").load(linkDetail);
+			});
+
+
+		});
+
+
+	</script>
+</body>
+
+</html>

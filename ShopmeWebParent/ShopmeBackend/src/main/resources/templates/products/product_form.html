@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head(${pageTitle})" />
+
+
+<body>
+
+	<div th:replace="navigation :: menu" />
+
+	<div class="container-fluid">
+
+		<div class="text-center">
+			<h2>Manage products | [[${pageTitle}]]</h2>
+
+		</div>
+
+		<form th:action="@{/products/save}" style="max-width: 100% !important;" method="POST" th:object="${product}"
+			enctype="multipart/form-data">
+
+			<input type="hidden" th:field="*{id}" />
+			<input th:if="${product.category != null}" type="hidden" th:value="${product.category.id}" id="categoryId" />
+
+			<!-- Nav tabs -->
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link active" id="home-tab" data-toggle="tab" href="#overview" role="tab"
+						aria-controls="home" aria-selected="true">Overview</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="profile-tab" data-toggle="tab" href="#description" role="tab"
+						aria-controls="profile" aria-selected="false">Description</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="messages-tab" data-toggle="tab" href="#images" role="tab"
+						aria-controls="messages" aria-selected="false">Images</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab"
+						aria-controls="settings" aria-selected="false">Details</a>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link" id="shipping-tab" data-toggle="tab" href="#shipping" role="tab"
+						aria-controls="settings" aria-selected="false">Shipping</a>
+				</li>
+			</ul>
+
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div class="tab-pane active p-3" id="overview" role="tabpanel" aria-labelledby="home-tab">
+					<div th:replace="products/product_overview :: content" />
+				</div>
+				<div class="tab-pane p-3" id="description" role="tabpanel" aria-labelledby="profile-tab">
+					<div th:replace="products/product_description :: content" />
+				</div>
+				<div class="tab-pane p-3" id="images" role="tabpanel" aria-labelledby="messages-tab">
+					<div th:replace="products/product_images :: content" />
+				</div>
+				<div class="tab-pane p-3" id="details" role="tabpanel" aria-labelledby="settings-tab">
+					<div th:replace="products/product_details :: content" />
+
+					<div class="mt-3">
+						<button type="button" class="btn btn-secondary" onclick="addNextDetailSection()">Add more detail</button>
+					</div>
+				</div>
+				<div class="tab-pane p-3" id="shipping" role="tabpanel" aria-labelledby="settings-tab">
+					<div th:replace="products/product_shipping :: content" />
+				</div>
+
+				<div class="text-center">
+					<input type="submit" value="Save" class="btn btn-primary m-3" />
+					<input type="button" value="Cancel" class="btn btn-secondary" id="cancelButton" />
+				</div>
+
+			</div>
+
+		</form>
+
+
+		<div th:replace="modal_fragments :: modal_dialog" />
+
+		<div th:replace="fragments :: footer" />
+
+	</div>
+	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/richtext/richtext.min.js}"></script>
+	<script>
+		const defaultImage = "[[@{/images/image-thumbnail.png}]]";
+		const checkUniqueUrl = "[[@{'/products/check_unique'}]]";
+		const moduleUrl = "[[@{/products}]]";
+		const brandsDropdown = $('#brand');
+		const categoriesDropdown = $('#category');
+		const brandId = brandsDropdown.val();
+		const getCategoriesUrl = "[[@{/brands}]]" + "/" + brandId + "/categories";
+	</script>
+	<script th:src="@{/js/common.js}"></script>
+	<script th:src="@{/js/product_form.js}"></script>
+</body>
+
+</html>
