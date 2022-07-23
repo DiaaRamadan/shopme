@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head(${pageTitle})" />
+
+<body>
+	<div th:replace="navigation :: header_menu" />
+
+	<div th:replace="breadCrumb :: content"> </div>
+
+	<div class="container-fluid mt-5	">
+		<div class="row">
+			<div class="col-sm">
+				<div>
+					<img id="big-image" th:src="@{${product.mainImagePath}}" class="img-fluid" style="height: 400px" />
+				</div>
+				<div class="row justify-content-center mt-3">
+					<div class="col">
+						<img th:src="@{${product.mainImagePath}}" class="image-thumbnail" width="50" />
+					</div>
+
+					<th:block th:each="extraImage : ${product.images}">
+						<div class="col">
+							<img th:src="@{${extraImage.imagePath}}" class="image-thumbnail" width="50" />
+						</div>
+					</th:block>
+				</div>
+			</div>
+
+			<div class="col-sm">
+				<div>
+					<h2>[[${product.name}]]</h2>
+				</div>
+				<div>
+					<span>Brand: [[${product.brand.name}]]</span>
+				</div>
+				<div>
+					<label>List price</label>
+
+					<span th:if="${product.discountPercent <= 0}">
+						<span th:if="${currency_symbol_position == 'before'}">[[${currency_symbol}]]</span>
+						[[${#numbers.formatDecimal(product.price, 1, thousands_point_type,decimal_digits,decimal_point_type)}]]</span>
+					<span th:if="${currency_symbol_position == 'after'}">[[${currency_symbol}]]</span>
+					</span>
+
+					<del><span th:if="${product.discountPercent > 0}">
+							<span th:if="${currency_symbol_position == 'before'}">[[${currency_symbol}]]</span>
+							[[${#numbers.formatDecimal(product.price, 1, thousands_point_type,decimal_digits,decimal_point_type)}]]</span>
+						<span th:if="${currency_symbol_position == 'after'}">[[${currency_symbol}]]</span>
+						</span></del>
+				</div>
+
+				<div th:if="${product.discountPercent > 0}">
+					Price:
+					<span style="font-size: large; color: darkred;">
+						<span th:if="${currency_symbol_position == 'before'}">[[${currency_symbol}]]</span>
+						[[${#numbers.formatDecimal(product.discountPrice, 1, thousands_point_type,decimal_digits,decimal_point_type)}]]</span>
+						<span th:if="${currency_symbol_position == 'after'}">[[${currency_symbol}]]</span>
+					</span>
+					([[${product.discountPercent}]] % off)
+				</div>
+				<div>&nbsp;</div>
+				<div th:utext="${product.shortDescription}"></div>
+			</div>
+			<div class="col-sm-2">
+				<div th:if="${product.inStock}" class="text-success"><b>In Stock</b></div>
+				<div th:unless="${product.inStock}" class="text-danger"><b>Out of Stock</b></div>
+				<div class="mt-2">
+					<input type="text" value="1" size="5" />
+				</div>
+				<div class="mt-3">
+					<button type="button" class="btn btn-primary">Add to Cart</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-12">
+			<div>
+				<hr />
+			</div>
+			<div>
+				<h3>Product Description: </h3>
+			</div>
+
+			<div th:utext="${product.fullDescription}"></div>
+
+		</div>
+	</div>
+
+	<div class="row mb-4">
+		<div class="col-12">
+			<div>
+				<hr />
+			</div>
+			<div>
+				<h3>Product Details: </h3>
+			</div>
+
+			<th:block th:each="detail : ${product.details}">
+				<div>
+					<b>[[${detail.name}]]</b>:
+					<span>[[${detail.value}]]</span>
+				</div>
+			</th:block>
+
+		</div>
+	</div>
+
+
+	<div th:replace="navigation :: footer_menu" />
+
+	<script>
+		$(document).ready(function () {
+
+			$('.image-thumbnail').mouseover(function () {
+				const src = $(this).attr('src');
+				$("#big-image").attr('src', src);
+
+			});
+
+		});
+	</script>
+</body>
+
+</html>

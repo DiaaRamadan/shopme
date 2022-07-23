@@ -1,14 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to shopme, Ecommerce</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('Shopeme')" />
+
 <body>
-    
-    <h1>Welcome to shopme, Ecommerce</h1>
-    
+	<div th:replace="navigation :: header_menu" />
+	<div class="container-fluid">
+		<div>
+			<h1>Shopping by category</h1>
+		</div>
+		
+		<div class="row">
+			<div class="col" th:each="category : ${categories}">
+				<div>
+					<img th:src="@{${category.imagePath}}" class="img-fluid" width="80"/>
+				</div>
+				
+				<div>
+					<a th:href="@{'/c/' + ${category.alias}}">[[${category.name}]]</a>
+				</div>
+				
+			</div>
+		</div>
+		
+	</div>
+	<div th:replace="navigation :: footer_menu" />
 </body>
+
 </html>

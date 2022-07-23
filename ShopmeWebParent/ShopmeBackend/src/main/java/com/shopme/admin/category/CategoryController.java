@@ -22,6 +22,7 @@ import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.user.UserService;
 import com.shopme.admin.user.export.Exporter;
 import com.shopme.common.entity.Category;
+import com.shopme.common.exceptions.CategoryNotFoundExecption;
 
 @Controller
 public class CategoryController {

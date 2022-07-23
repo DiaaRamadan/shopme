@@ -5,20 +5,59 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>[[${title}]]</title>
+	<title>[[${title}]] - [[${site_name}]]</title>
 	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
-	<link rel="stylesheet" type="text/css" th:href="@{/richtext/richtext.min.css}" />
+	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 
 </head>
 
 
 <body>
 
-	<div th:fragment="footer" class="text-center m-3">
-		<p>Shopme control panel - Copyright &copy; shopme </p>
+	<a th:fragment="page_link(moduleUrl, pageNum, label)" class="page-link"
+		th:href="@{'/'+ ${moduleUrl}+'/page/' + ${pageNum} + '?keyword=' + ${keyword != null ? keyword : ''}}">
+		[[${label}]]</a>
+
+	<div th:fragment="pagination(moduleUrl, entityName)" th:remove="tag">
+		<div class="text-center m-1" th:if="${totalItems > 0}">
+			<span>Showing [[${entityName}]] # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+		</div>
+
+		<div class="text-center m-1" th:unless="${totalItems > 0}">
+			<span>No [[${entityName}]] found</span>
+		</div>
+
+
+		<div th:if="${totalItems > 0}">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-center">
+					<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled' }">
+						<a th:replace="fragments :: page_link(${moduleUrl}, 1, 'First')" />
+					</li>
+
+					<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled' }">
+						<a th:replace="fragments :: page_link(${moduleUrl}, ${currentPage - 1}, 'Previous')" />
+					</li>
+
+					<li th:class="${currentPage != i ? 'page-item' : 'page-item active' }"
+						th:each="i: ${#numbers.sequence(1,totalPages)}">
+						<a th:replace="fragments :: page_link(${moduleUrl}, ${i}, ${i})" />
+					</li>
+
+
+					<li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled' }">
+						<a th:replace="fragments :: page_link(${moduleUrl}, ${currentPage + 1}, 'Next')" />
+					</li>
+					<li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled' }">
+						<a th:replace="fragments :: page_link(${moduleUrl}, ${totalPages}, 'Last')" />
+					</li>
+
+				</ul>
+			</nav>
+		</div>
 	</div>
 
-	
 </body>
 
 </html>

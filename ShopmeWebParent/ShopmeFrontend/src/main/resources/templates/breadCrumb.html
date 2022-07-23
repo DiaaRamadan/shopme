@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+	<div th:fragment="content" th:remove="tag">
+		<div th:if="${categoryParents != null || !categoryParents.empty()}">
+			<div class="row">
+				<div class="col">
+					<nav style=" background-color: #e9ecef; padding: 8px; --bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
+						aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+							<th:block th:each="cat : ${categoryParents}">
+								<li class="breadcrumb-item"><a th:href="@{'/c/' + ${cat.alias}}">[[${cat.name}]]</a>
+								</li>
+							</th:block>
+							<li th:if="${product !=null}" class="breadcrumb-item"><span>[[${product.shortName}]]</span>
+							</li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</body>
+
+</html>

@@ -64,7 +64,7 @@ public class BrandService {
 
 	public boolean isUniqueBrand(Integer id, String name) {
 
-		boolean isCreateNew = id == null || id == 0;
+		boolean isCreateNew = (id == null) || (id == 0);
 
 		var brand = brandRepository.findByName(name);
 		

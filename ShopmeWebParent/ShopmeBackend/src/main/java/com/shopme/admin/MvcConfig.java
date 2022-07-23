@@ -16,6 +16,7 @@ public class MvcConfig implements WebMvcConfigurer {
 		registerResourceHandler("../brands-images", registry);
 		registerResourceHandler("../category-images", registry);
 		registerResourceHandler("../product-images", registry);
+		registerResourceHandler("../site-logo", registry);
 		
 	}
 
@@ -25,7 +26,6 @@ public class MvcConfig implements WebMvcConfigurer {
 		var dirPath = Paths.get(dirName);
 		var photoPath = dirPath.toFile().getAbsolutePath();
 		var logicalPath = dirName.replace("..", "") + "/**";
-		
 		registry.addResourceHandler(logicalPath).addResourceLocations("file:/" + photoPath + "/");
 		
 	}

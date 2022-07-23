@@ -4,8 +4,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +31,7 @@ import com.shopme.admin.brand.BrandService;
 import com.shopme.common.entity.Brand;
 import com.shopme.common.entity.Product;
 import com.shopme.common.entity.ProductImage;
+import com.shopme.common.exceptions.ProductNotFoundExecption;
 
 @Controller
 public class ProductController {
@@ -53,7 +59,7 @@ public class ProductController {
 		List<Product> products = page.getContent();
 		model.addAttribute("products", products);
 
-		
+		System.out.println(page.getSize());
 
 		long startCount = (pageNum - 1) * ProductService.PRODUCT_PER_PAGE + 1;
 		long endCount = startCount + ProductService.PRODUCT_PER_PAGE - 1;
@@ -102,12 +108,19 @@ public class ProductController {
 			@RequestParam(name = "detailNames", required = false) String[] detailNames,
 			@RequestParam(name = "detailValues", required = false) String[] detailValues,
 			@RequestParam(name = "imageIDs", required = false) String[] imageIDs,
-			@RequestParam(name = "imageNames", required = false) String[] imageNames) throws IOException {
+			@RequestParam(name = "imageNames", required = false) String[] imageNames,
+			@RequestParam("create_time") String createdTime) throws IOException, ParseException {
 
+		
 		setMainImage(multipartFile, product);
 		setExistingExtraImageName(imageIDs, imageNames, product);
 		setNewExtraImages(extraImages, product);
 		setProductDetails(detailIDs, detailNames, detailValues, product);
+		if(createdTime != null) {
+			DateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+			Date date = formatter.parse(createdTime);
+			product.setCreatedTime(date);
+		}
 		Product savedProduct = productService.save(product);
 		saveUplodedImages(multipartFile, extraImages, savedProduct);
 
@@ -190,9 +203,9 @@ public class ProductController {
 		if (extraImages.length > 0) {
 			String uploadDir = "../product-images/" + savedProduct.getId() + "/extras";
 			for (MultipartFile extraImage : extraImages) {
-				if (!multipartFile.isEmpty()) {
+				if (!extraImage.isEmpty()) {
 					var fileName = StringUtils.cleanPath(extraImage.getOriginalFilename());
-					FileUploadUtil.save(uploadDir, fileName, multipartFile);
+					FileUploadUtil.save(uploadDir, fileName, extraImage);
 				}
 			}
 		}

@@ -22,7 +22,7 @@ public class BrandRestController {
 	@PostMapping("/brands/check_unique")
 	public String checkUnique(@Param("id") Integer id, @Param("name") String name) {
 
-		if (!brandService.isUniqueBrand(id, name))
+		if (brandService.isUniqueBrand(id, name))
 			return "DuplicateName";
 		return "OK";
 	}

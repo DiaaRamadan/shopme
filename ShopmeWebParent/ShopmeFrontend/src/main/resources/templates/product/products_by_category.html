@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head(${pageTitle})" />
+
+<body>
+	<div th:replace="navigation :: header_menu" />
+
+	<div th:replace="breadCrumb :: content"> </div>
+	<div class="container-fluid">
+		<div class="row">
+			<th:block th:each="cat : ${category.children}">
+				<div class="col" th:if="${cat.enabled == true}">
+					<div>
+						<a th:href="@{'/c' + ${cat.alias}}">
+							<img th:src="@{${cat.mainPath}}" height="100" />
+							<br />
+							<b>[[${cat.name}]]</b>
+						</a>
+					</div>
+				</div>
+			</th:block>
+		</div>
+
+		<div class="row mt-4">
+			<th:block th:each="product : ${products}">
+				<div class="col">
+					<div>
+						<a th:href="@{'/p/' + ${product.alias}}">
+							<img th:src="@{${product.mainImagePath}}" width="150" />
+							<br />
+							<b>[[${product.shortName}]]</b>
+						</a>
+					</div>
+					<div th:if="${product.discountPercent < 0}">
+						<span>
+							<span th:if="${currency_symbol_position == 'before'}">[[${currency_symbol}]]</span>
+							[[${#numbers.formatDecimal(product.price, 1, thousands_point_type,decimal_digits,decimal_point_type)}]]</span>
+						<span th:if="${currency_symbol_position == 'after'}">[[${currency_symbol}]]</span>
+						</span>
+					</div>
+
+					<div th:if="${product.discountPercent > 0}">
+						<span style="font-size: large; color: darkred;">
+							<span th:if="${currency_symbol_position == 'before'}">[[${currency_symbol}]]</span>
+							[[${#numbers.formatDecimal(product.discountPrice, 1, thousands_point_type,decimal_digits,decimal_point_type)}]]</span>
+						<span th:if="${currency_symbol_position == 'after'}">[[${currency_symbol}]]</span>
+						<del><span th:if="${currency_symbol_position == 'before'}">[[${currency_symbol}]]</span>
+							[[${#numbers.formatDecimal(product.price, 1, thousands_point_type,decimal_digits,decimal_point_type)}]]</span>
+							<span th:if="${currency_symbol_position == 'after'}">[[${currency_symbol}]]</span></del>
+					</div>
+
+				</div>
+			</th:block>
+		</div>
+	</div>
+	<div th:replace="fragments :: pagination('/c/${category.alias}', 'product')"></div>
+
+	<div th:replace="navigation :: footer_menu" />
+</body>
+
+</html>

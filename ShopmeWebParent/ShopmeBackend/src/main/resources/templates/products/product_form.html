@@ -19,6 +19,7 @@
 			enctype="multipart/form-data">
 
 			<input type="hidden" th:field="*{id}" />
+			<input type="hidden" th:value="*{createdTime}" name="create_time"/>
 			<input th:if="${product.category != null}" type="hidden" th:value="${product.category.id}" id="categoryId" />
 
 			<!-- Nav tabs -->
