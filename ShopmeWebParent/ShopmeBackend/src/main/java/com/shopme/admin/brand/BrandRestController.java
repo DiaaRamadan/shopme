@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopme.common.entity.Brand;
-import com.shopme.common.entity.Category;
 
 @RestController
 public class BrandRestController {

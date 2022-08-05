@@ -11,9 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.shopme.admin.category.CategoryService;
 import com.shopme.common.entity.Brand;
-import com.shopme.common.entity.Category;
 
 @Service
 @Transactional

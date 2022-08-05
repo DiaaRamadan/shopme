@@ -17,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.common.entity.Setting;
-import com.shopme.common.entity.SettingBag;
 
 @Controller
 public class SettingController {
@@ -51,6 +50,24 @@ public class SettingController {
 		return "redirect:/settings";
 
 	}
+	
+	@PostMapping("settings/save-mail-server")
+	public String saveMailSeverSettings(HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) throws IOException {
+		var mailServerSettings = settingService.getMailServerSettings();
+		updateSettingValuesFromForm(httpServletRequest, mailServerSettings);
+		redirectAttributes.addFlashAttribute("message", "Mail Server Settings has been saved.");
+		return "redirect:/settings";
+		
+	}
+	
+	@PostMapping("settings/save-mail-templates")
+	public String saveMailTemplatesSettings(HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) throws IOException {
+		var mailTemplatesSettings = settingService.getMailTemplatesSettings();
+		updateSettingValuesFromForm(httpServletRequest, mailTemplatesSettings);
+		redirectAttributes.addFlashAttribute("message", "Mail Templates Settings has been saved.");
+		return "redirect:/settings";
+		
+	}
 
 	private void saveSiteLogo(MultipartFile multipartFile, GeneralSettingBag settingBag) throws IOException {
 		if (!multipartFile.isEmpty()) {
@@ -74,6 +91,7 @@ public class SettingController {
 	
 	public void updateSettingValuesFromForm(HttpServletRequest request, List<Setting> settings) {
 		for(Setting setting : settings) {
+			System.out.println(setting);
 			String value = request.getParameter(setting.getKey());
 			if(value != null) {
 				setting.setValue(value);

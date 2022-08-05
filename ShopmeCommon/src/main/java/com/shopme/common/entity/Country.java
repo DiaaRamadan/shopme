@@ -73,13 +73,13 @@ public class Country {
 	}
 
 
-//	public Set<State> getStates() {
-//		return states;
-//	}
-//
-//	public void setStates(Set<State> states) {
-//		this.states = states;
-//	}
+	public Set<State> getStates() {
+		return states;
+	}
+
+	public void setStates(Set<State> states) {
+		this.states = states;
+	}
 	
 	@Override
 	public String toString() {

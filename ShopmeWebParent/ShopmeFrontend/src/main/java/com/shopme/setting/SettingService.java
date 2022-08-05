@@ -1,6 +1,5 @@
 package com.shopme.setting;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +19,10 @@ public class SettingService {
 		return settingRepository.findByTwoCategories(SettingCategory.CURRENCY, SettingCategory.GENERAL);
 	}
 	
+	public EmailSettingBag getEmailSettingBag() {
+		List<Setting> settings = settingRepository.findByCategory(SettingCategory.MAIL_SERVER);
+		settings.addAll(settingRepository.findByCategory(SettingCategory.MAIL_TEMPLATES));
+		return new EmailSettingBag(settings);
+	}
 
 }
