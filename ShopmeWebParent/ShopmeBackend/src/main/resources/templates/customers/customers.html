@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('Customers - Shopme admin')" />
+
+<body>
+
+	<div th:replace="navigation :: menu" />
+
+	<div class="container-fluid">
+
+		<div>
+			<h2>Manage Customers</h2>
+			<a th:href="@{/customers/export/csv}" class="fas fa-file-csv fa-2x icon-dark"></a>
+
+		</div>
+
+		<div th:if="${message != null}" class="alert alert-success text-center">
+			[[${message}]]
+		</div>
+
+		<div th:replace="fragments :: search_form('/customers/page/1')" />
+
+
+		<div>
+			<table class="table table-bordered table-hover table-striped table-responsive">
+				<thead class="thead-dark">
+					<tr>
+						<th th:replace="fragments :: column_link('/customers','id', 'Customer ID')">
+						<th th:replace="fragments :: column_link('/customers', 'firstName', 'First name')">
+						<th th:replace="fragments :: column_link('/customers', 'lastName', 'Last name')">
+						<th th:replace="fragments :: column_link('/customers', 'email', 'Email')">
+						<th th:replace = "fragments :: column_link('/customers', 'city', 'City')">
+						<th th:replace = "fragments :: column_link('/customers', 'state', 'State')">
+						<th th:replace = "fragments :: column_link('/customers', 'country', 'Country')">
+						<th th:replace="fragments :: column_link('/customers', 'enabled', 'Enabled')">
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="customer : ${customers}">
+						<td>[[${customer.id}]]</td>
+						<td>[[${customer.firstName}]]</td>
+						<td>[[${customer.lastName}]]</td>
+						<td>[[${customer.email}]]</td>
+						<td>[[${customer.city}]]</td>
+						<td>[[${customer.state}]]</td>
+						<td>[[${customer.country.name}]]</td>
+						
+						<td>
+							<a th:if="${customer.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
+								th:href="@{'/customers/' + ${customer.id} + '/enabled/false'}" title="Disabled this customer"></a>
+							<a th:if="${customer.enabled == false}" class="fas fa-circle fa-2x icon-dark"
+								th:href="@{'/customers/' + ${customer.id} + '/enabled/true'}" title="Enabled this customer"></a>
+						</td>
+
+						<td>
+							<a class="fas fa-edit fa-2x icon-green" th:href="@{'/customers/edit/' + ${customer.id}}"
+								title="Edit this user"></a>
+							&nbsp;
+							<a class="fas fa-trash fa-2x icon-dark delete-link"
+								th:href="@{'/customers/delete/' + ${customer.id}}" th:customerId="${customer.id}"
+								title="Delete this customer"></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div th:replace="fragments :: pagination('customers', 'customers')" />
+		<div th:replace="fragments :: footer" />
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade text-center" id="modal-confirm">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modal-title"></h5>
+					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<span id="modal-body"></span>
+				</div>
+				<div class="modal-footer">
+					<a href="" class="btn btn-success" id="yes-btn">Yes</a>
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+	<script>
+		$(document).ready(function (e) {
+			$(".delete-link").click(function (e) {
+				e.preventDefault();
+				const url = $(this).attr('href');
+				const customerId = $(this).attr("customerId");
+				$("#modal-body").text("Are you sure want delete this user ID (" + customerId + " ) ?");
+				$('#yes-btn').attr("href", url);
+				$('#modal-confirm').modal("show");
+			})
+		});
+
+		$("#clear-search").click(function (e) {
+
+			window.location = "[[@{/customers}]]";
+
+		});
+	</script>
+</body>
+
+</html>
