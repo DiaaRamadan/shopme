@@ -31,11 +31,11 @@
 					</li>
 
 					<li class="nav-item">
-						<a class="nav-link active" href="">Login</a>
+						<a class="nav-link active" th:href="@{/login}">Login</a>
 					</li>
 
 					<li class="nav-item">
-						<a class="nav-link active" th:href="@{register}">Register</a>
+						<a class="nav-link active" th:href="@{/register}">Register</a>
 					</li>
 
 					<li class="nav-item">
@@ -46,6 +46,63 @@
 			</div>
 		</nav>
 
+	</div>
+
+	<div th:fragment="search_nav" class="row">
+		<div class="col-md">
+			<th:block sec:authorize="isAuthenticated()">
+				<form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+					<input type="submit" value="logout">
+				</form>
+			</th:block>
+
+			<nav class="navbar navbar-expand-sm navbar-light">
+
+
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<form class="form-inline d-flex">
+						<input class="form-control mr-sm-2" type="search" name="keyword" placeholder="Keyword"
+							th:value="${keyword}" required />
+
+						<input type="submit" value="Search" class="btn btn-outline-success" />
+
+					</form>
+					<ul class="navbar-nav mr-auto">
+						<th:block sec:authorize="isAuthenticated()">
+							<li class="nav-item active">
+								<b><a class="nav-link" th:href="@{/customer}" sec:authentication="principal.fullName"></a></b>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">Addresses</a>
+							</li>
+							
+							<li class="nav-item">
+								<a class="nav-link" href="#">Questions</a>
+							</li>
+							
+							<li class="nav-item">
+								<a class="nav-link" href="#">Reviews</a>
+							</li>
+							
+							<li class="nav-item">
+								<a class="nav-link" href="#">Orders</a>
+							</li>
+							
+							<li class="nav-item">
+								<a class="nav-link" href="#">Cart</a>
+							</li>
+							
+							<li class="nav-item">
+								<a class="nav-link" href="javascript: document.logoutForm.submit();">logout</a>
+							</li>
+							
+						</th:block>
+					</ul>
+
+				</div>
+			</nav>
+
+		</div>
 	</div>
 
 	<div th:fragment="footer_menu">

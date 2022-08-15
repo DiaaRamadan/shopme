@@ -81,12 +81,26 @@ public class CustomerController {
 		try {
 			customerService.updateEnabledStatus(id, status);
 			String statusType = status ? "Enabled" : "Disabled";
-			redirectAttributes.addFlashAttribute("message", "User with ID [" + id + "] " + statusType + " successfully");
-			return "redirect:/customers";
+			redirectAttributes.addFlashAttribute("message",
+					"User with ID [" + id + "] " + statusType + " successfully");
 
 		} catch (CustomerNotFoundException exception) {
 			redirectAttributes.addFlashAttribute("message", exception.getMessage());
-			return "redirect:/customers";
 		}
+		return "redirect:/customers";
+
+	}
+
+	@GetMapping("/customers/delete/{id}")
+	public String delete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+
+		try {
+			customerService.delete(id);
+			redirectAttributes.addFlashAttribute("message", "Customer with ID [" + id + "] deleted successfully");
+		} catch (CustomerNotFoundException exception) {
+			redirectAttributes.addFlashAttribute("message", exception.getMessage());
+		}
+		return "redirect:/customers";
+
 	}
 }
