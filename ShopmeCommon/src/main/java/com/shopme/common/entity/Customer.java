@@ -68,7 +68,14 @@ public class Customer {
 	@Column(name = "created_time", nullable = false)
 	private Date createdTime;
 
+	@Column(name = "reset_password_token", length = 30)
+	private String resetPasswordToken;
+	
 	public Customer() {
+	}
+	
+	public Customer(Integer id) {
+		this.id = id;
 	}
 
 	public Integer getId() {
@@ -199,6 +206,14 @@ public class Customer {
 		this.authenticationType = authenticationType;
 	}
 	
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
+	}
+
 	@Transient
 	public String getFullName() {
 		return firstName + " " + lastName;

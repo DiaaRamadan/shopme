@@ -13,9 +13,8 @@ import com.shopme.common.entity.User;
 
 public class ShomeUserDetails implements UserDetails {
 
+	private static final long serialVersionUID = 1L;
 	private User user;
-	
-	
 	
 	public ShomeUserDetails(User user) {
 		

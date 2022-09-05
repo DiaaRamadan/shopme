@@ -30,14 +30,16 @@
 						<a class="nav-link active" href="">Shipping &amp; Delivery</a>
 					</li>
 
-					<li class="nav-item">
-						<a class="nav-link active" th:href="@{/login}">Login</a>
-					</li>
+					<th:block sec:authorize="!isAuthenticated()">
+						<li class="nav-item">
+							<a class="nav-link active" th:href="@{/login}">Login</a>
+						</li>
 
-					<li class="nav-item">
-						<a class="nav-link active" th:href="@{/register}">Register</a>
-					</li>
-
+						<li class="nav-item">
+							<a class="nav-link active" th:href="@{/register}">Register</a>
+						</li>
+					</th:block>
+					
 					<li class="nav-item">
 						<a class="nav-link active" href="">Contact</a>
 					</li>
@@ -70,32 +72,33 @@
 					<ul class="navbar-nav mr-auto">
 						<th:block sec:authorize="isAuthenticated()">
 							<li class="nav-item active">
-								<b><a class="nav-link" th:href="@{/customer}" sec:authentication="principal.fullName"></a></b>
+								<b><a class="nav-link" th:href="@{/account-details}"
+										sec:authentication="principal.fullName"></a></b>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="#">Addresses</a>
 							</li>
-							
+
 							<li class="nav-item">
 								<a class="nav-link" href="#">Questions</a>
 							</li>
-							
+
 							<li class="nav-item">
 								<a class="nav-link" href="#">Reviews</a>
 							</li>
-							
+
 							<li class="nav-item">
 								<a class="nav-link" href="#">Orders</a>
 							</li>
-							
+
 							<li class="nav-item">
-								<a class="nav-link" href="#">Cart</a>
+								<a class="nav-link" th:href="@{/cart}">Cart</a>
 							</li>
-							
+
 							<li class="nav-item">
 								<a class="nav-link" href="javascript: document.logoutForm.submit();">logout</a>
 							</li>
-							
+
 						</th:block>
 					</ul>
 

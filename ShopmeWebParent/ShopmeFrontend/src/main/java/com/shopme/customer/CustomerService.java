@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.shopme.common.entity.AuthenticationType;
 import com.shopme.common.entity.Country;
 import com.shopme.common.entity.Customer;
+import com.shopme.common.exceptions.CustomerNotFoundException;
 import com.shopme.setting.CountryRepository;
 
 import net.bytebuddy.utility.RandomString;
@@ -72,16 +73,31 @@ public class CustomerService {
 		return customerRepository.findByEmail(email);
 	}
 
-	private void encodePassword(Customer customer) {
-		var encodedPassword = passwordEncoder.encode(customer.getPassword());
-		customer.setPassword(encodedPassword);
+	public void update(Customer customer) {
+		Customer savedCustomer = customerRepository.findById(customer.getId()).get();
+
+		if (savedCustomer.getAuthenticationType().equals(AuthenticationType.DATABASE)) {
+			if (customer.getPassword() != null && !customer.getPassword().isEmpty()) {
+				customer.setPassword(passwordEncoder.encode(customer.getPassword()));
+			} else {
+				customer.setPassword(savedCustomer.getPassword());
+			}
+		} else {
+			customer.setPassword(savedCustomer.getPassword());
+		}
+		customer.setEnabled(savedCustomer.isEnabled());
+		customer.setCreatedTime(savedCustomer.getCreatedTime());
+		customer.setVerificationCode(savedCustomer.getVerificationCode());
+		customer.setAuthenticationType(savedCustomer.getAuthenticationType());
+		customer.setResetPasswordToken(customer.getResetPasswordToken());
+		customerRepository.save(customer);
 
 	}
 
 	public void addNewCustomerUponOAuthLogin(String name, String email, String countryCode) {
 
 		var customer = new Customer();
-		setName(name,customer);
+		setName(name, customer);
 		customer.setEmail(email);
 		customer.setEnabled(true);
 		customer.setCreatedTime(new Date());
@@ -106,4 +122,49 @@ public class CustomerService {
 		customer.setFirstName(splitedName[0]);
 		customer.setLastName(splitedName[1]);
 	}
+
+	private void encodePassword(Customer customer) {
+		var encodedPassword = passwordEncoder.encode(customer.getPassword());
+		customer.setPassword(encodedPassword);
+
+	}
+
+	public String updateRestPasswordToken(String email) throws Exception {
+
+		var customer = customerRepository.findByEmail(email);
+		if (customer == null)
+			throw new CustomerNotFoundException("E-mail [" + email + "] not exist");
+
+		if (customer.getAuthenticationType() != AuthenticationType.DATABASE)
+			throw new Exception("Your authentication type is [" + customer.getAuthenticationType()
+					+ "], and not allowed to reset password");
+
+		var token = RandomString.make(30);
+		customer.setResetPasswordToken(token);
+		customerRepository.save(customer);
+		return token;
+	}
+
+	public Customer getByResetPasswordToken(String token) throws CustomerNotFoundException {
+		var customer = customerRepository.findByResetPasswordToken(token);
+
+		if (customer == null)
+			throw new CustomerNotFoundException("Invalid token");
+
+		return customer;
+	}
+	
+	public void updatePassword(String token, String newPassword) throws CustomerNotFoundException {
+		
+		var customer = customerRepository.findByResetPasswordToken(token);
+		
+		if(customer == null)
+			throw new CustomerNotFoundException("Customer Not found: Invalid token");
+		
+		customer.setPassword(newPassword);
+		encodePassword(customer);
+		customer.setResetPasswordToken(null);
+		customerRepository.save(customer);
+	}
+
 }

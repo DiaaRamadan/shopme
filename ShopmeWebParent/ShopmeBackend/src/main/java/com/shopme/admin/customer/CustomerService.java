@@ -83,6 +83,9 @@ public class CustomerService {
 			customer.setPassword(savedCustomer.getPassword());
 		}
 		customer.setCreatedTime(savedCustomer.getCreatedTime());
+		customer.setEnabled(savedCustomer.isEnabled());
+		customer.setVerificationCode(savedCustomer.getVerificationCode());
+		customer.setResetPasswordToken(savedCustomer.getResetPasswordToken());
 		customerReposoitry.save(customer);
 	}
 
