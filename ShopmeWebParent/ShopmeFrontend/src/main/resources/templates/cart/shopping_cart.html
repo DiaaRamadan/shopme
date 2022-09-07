@@ -70,7 +70,7 @@
 
 								<span>
 									<span th:if="${currency_symbol_position == 'before'}">[[${currency_symbol}]]</span>
-									<span class="h4"> [[${#numbers.formatDecimal(item.subTotal, 1,
+									<span class="h4 subtotal"  th:id="${'subtotal' + product.id}"> [[${#numbers.formatDecimal(item.subTotal, 1,
 										thousands_point_type,decimal_digits,decimal_point_type)}]]</span></span>
 								<span th:if="${currency_symbol_position == 'after'}">[[${currency_symbol}]]</span>
 								</span>
@@ -90,11 +90,11 @@
 
 				<span>
 					<span th:if="${currency_symbol_position == 'before'}">[[${currency_symbol}]]</span>
-					<span class="h4"> [[${#numbers.formatDecimal(estmiateTotal, 1,
+					<span class="h4" id="total"> [[${#numbers.formatDecimal(estmiateTotal, 1,
 						thousands_point_type,decimal_digits,decimal_point_type)}]]</span></span>
 				<span th:if="${currency_symbol_position == 'after'}">[[${currency_symbol}]]</span>
 				</span>
-				
+
 				<div class="mt-2">
 					<button class="btn btn-danger p-3 mt-2">Check out</button>
 				</div>
@@ -108,6 +108,14 @@
 		<h3>You have not chosen ant product yet.</h3>
 	</div>
 	<div th:replace="navigation :: footer_menu" />
+
+	<script>
+		const contextPath = "[[@{/}]]";
+		const csrfHeaderName = "[[${_csrf.headerName}]]";
+		const csrfValue = "[[${_csrf.token}]]";
+	</script>
+
+	<script th:src="@{/js/shopping_cart.js}"></script>
 </body>
 
 </html>
