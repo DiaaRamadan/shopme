@@ -4,8 +4,8 @@ server:
     context-path: /shopme
 spring:
   datasource:
-    password: P@ssword
-    url: jdbc:mysql://localhost:3366/shopmedb
+    password: 12345678
+    url: jdbc:mysql://localhost:3306/shopmedb?useSSL=false&serverTimezone=UTC
     username: root
   jpa:
     hibernate:
