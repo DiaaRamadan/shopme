@@ -1,13 +1,15 @@
 version: '3'
 services:
   mysql_db:
-    image: mysql
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: shopmedb
-      MYSQL_USER: shopme
-      MYSQL_PASSWORD: shopme
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass12345678
 
+    networks:
+      - my_network
     restart: always
     volumes:
       - mysql_data:/var/lib/mysql
@@ -17,15 +19,18 @@ services:
   backend:
     build: ./ShopmeWebParent/ShopmeBackend
     restart: always
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysql_db:3306/shopmedb?allowPublicKeyRetrieval=true
     depends_on:
       - mysql_db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/shopmedb?useSSL=false
-      SPRING_DATASOURCE_USERNAME: shopme
-      SPRING_DATASOURCE_PASSWORD: shopme
     ports:
       - "8080:8080"
+    networks:
+      - my_network
 
 volumes:
   mysql_data:
+
+networks:
+  my_network:
 
