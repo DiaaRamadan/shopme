@@ -1,0 +1,31 @@
+version: '3'
+services:
+  mysql_db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: shopmedb
+      MYSQL_USER: shopme
+      MYSQL_PASSWORD: shopme
+
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  backend:
+    build: ./ShopmeWebParent/ShopmeBackend
+    restart: always
+    depends_on:
+      - mysql_db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/shopmedb?useSSL=false
+      SPRING_DATASOURCE_USERNAME: shopme
+      SPRING_DATASOURCE_PASSWORD: shopme
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql_data:
+

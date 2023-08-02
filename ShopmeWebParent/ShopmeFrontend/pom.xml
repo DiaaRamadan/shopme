@@ -7,8 +7,8 @@
 		<groupId>com.shopme</groupId>
 		<artifactId>ShopmeWebParent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+
 	<artifactId>ShopmeFrontend</artifactId>
 	<name>ShopmeFrontend</name>
 	<description>Shopme web application</description>
