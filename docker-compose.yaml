@@ -26,7 +26,7 @@ services:
     depends_on:
       - mysql_db
     ports:
-      - "8083:8083"
+      - "8083:8080"
     networks:
       - my_network
 
