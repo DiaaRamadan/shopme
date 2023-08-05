@@ -1,4 +1,4 @@
-
+def gv
 pipeline {
 
     agent any
@@ -9,12 +9,21 @@ pipeline {
 
     stages{
     
+        stage("init"){
+            steps {
+                script {
+
+                    gv = load "script.groovy"
+
+                }
+            }
+        }
+
         stage("build jar") {
     
             steps {
                 script {
-                    echo "building the application..."
-                    sh 'mvn package  -DskipTests'
+                  gv.buildJar()
                 }
             }
     
@@ -24,15 +33,7 @@ pipeline {
     
             steps {
                 script {
-                    echo "building the docker image..."
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                        sh 'docker build -t diaa96/shopme:backend-1.0 ./ShopmeWebParent/ShopmeBackend/'
-                        sh 'docker build -t diaa96/shopme:front-1.0 ./ShopmeWebParent/ShopmeFrontend/'
-                        sh "echo $PASS | docker login -u $USER --password-stdin"
-                        sh 'docker push diaa96/shopme:backend-1.0'
-                        sh 'docker push diaa96/shopme:front-1.0'
-                        
-                    }
+                   gv.buildImage()
                 }
             }
     
@@ -42,8 +43,7 @@ pipeline {
     
             steps {
                 script {
-    
-                    echo "Deploying the application..."
+                    gv.deployApp()
                 }
             }
         }
