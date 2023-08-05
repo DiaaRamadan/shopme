@@ -1,85 +1,45 @@
 
-def gv
-
 pipeline {
 
     agent any
 
-    // environment {
-    //     NEW_VERSION = '1.0'
-    //     SERVER_CERDENTIALS = credentials('test-in-file')
-    // }
-
-    // tools {
-    //     maven 'maven-3.9'
-    // }
-
-    parameters {
-        //string(name: 'VERSION', defaultValue: '', description: 'version to deploy on prod')
-        choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
-        booleanParam(name: 'executeTests',  defaultValue: true, description: '')
+    tools {
+        maven 'maven-3.9'
     }
 
-    stages {
-
-        stage("init"){
-            steps{
-                script {
-                    gv = load "script.groovy"
-                }
-            }
+    stage("build jar") {
             
-        }
-        
-
-        stage("build") {
-            
-            steps {
-                script {
-                    gv.buildApp()
-                }
+        steps {
+            script {
+                echo "building the application..."
+                sh 'mvn package'
             }
-
-        }
-
-        stage("test") {
-
-            when {
-                expression {
-                    params.executeTests
-                }
-            }
-            
-            steps {
-               
-               script {
-                gv.testApp()
-               }
-
-            }
-
-        }
-
-        stage("deploy") {
-
-            input {
-                message "Select the env to deploy"
-                ok "done"
-                parameters {
-                    choice(name: 'ENV', choices: ['dev', 'stating', 'prod'], description: '')
-                }
-            }
-            
-            steps {
-                
-                script {
-                    gv.deployApp()
-                    echo "Deploying to ${ENV}"
-                }
-
-            }
-
         }
 
     }
+
+    stage("build image") {
+
+        steps {
+            script {
+                echo "building the docker image..."
+                withCredentials([userPassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    sh 'docker build -t diaa96/shopme:backend-1.0 ./ShopmeWebParent/ShopmeBackend/'
+                    sh 'docker build -t diaa96/shopme:front-1.0 ./ShopmeWebParent/ShopmeFrontend/'
+                }
+            }
+        }
+
+    }
+
+    stage("deploy") {
+
+        steps {
+            script {
+
+                echo "Deploying to ${ENV}"
+            }
+        }
+    }
+
 }
