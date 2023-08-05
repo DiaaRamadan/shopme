@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     echo "building the docker image..."
-                    withCredentials([userPassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                         sh 'docker build -t diaa96/shopme:backend-1.0 ./ShopmeWebParent/ShopmeBackend/'
                         sh 'docker build -t diaa96/shopme:front-1.0 ./ShopmeWebParent/ShopmeFrontend/'
                     }
