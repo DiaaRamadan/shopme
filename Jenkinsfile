@@ -23,7 +23,7 @@ pipeline {
             
             steps {
                 echo "Building the application..."
-                echo "Building version is ${NEW_VERSION }"
+               // echo "Building version is ${NEW_VERSION}"
             }
 
         }
@@ -38,7 +38,7 @@ pipeline {
             
             steps {
                 echo "Testing the application..."
-                echo "Credentials is ${SERVER_CERDENTIALS}"
+               // echo "Credentials is ${SERVER_CERDENTIALS}"
             }
 
         }
