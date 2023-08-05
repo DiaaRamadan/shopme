@@ -28,6 +28,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                         sh 'docker build -t diaa96/shopme:backend-1.0 ./ShopmeWebParent/ShopmeBackend/'
                         sh 'docker build -t diaa96/shopme:front-1.0 ./ShopmeWebParent/ShopmeFrontend/'
+                        sh "docker login -u ${USER} -p ${PASS}"
                     }
                 }
             }
@@ -39,7 +40,7 @@ pipeline {
             steps {
                 script {
     
-                    echo "Deploying to ${ENV}"
+                    echo "Deploying the application..."
                 }
             }
         }
