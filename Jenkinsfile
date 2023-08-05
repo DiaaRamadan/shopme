@@ -1,4 +1,4 @@
-pipelines {
+pipeline {
 
     agent any
 
@@ -12,7 +12,7 @@ pipelines {
 
         }
 
-          stage("test") {
+        stage("test") {
             
             steps {
                 echo "Testing the application..."
@@ -20,7 +20,7 @@ pipelines {
 
         }
 
-          stage("deploy") {
+        stage("deploy") {
             
             steps {
                 echo "Deploy the application..."
