@@ -19,8 +19,26 @@ pipeline {
             }
         }
 
+        stage("test") {
+
+            steps {
+                script {
+                    echo "Testing the application..."
+                    echo "Execute pipeline for branch $BRANCH_NAME..."
+                }
+            }
+
+        }
+
         stage("build jar") {
-    
+
+            when {
+                expression {
+
+                    BRANCH_NAME == 'master'
+                }
+            }
+
             steps {
                 script {
                   gv.buildJar()
@@ -30,7 +48,12 @@ pipeline {
         }
     
         stage("build image") {
-    
+                 expression {
+
+                    BRANCH_NAME == 'master'
+                }
+            }
+
             steps {
                 script {
                    gv.buildImage()
