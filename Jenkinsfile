@@ -8,8 +8,6 @@ library indentifer: 'jenkins-shared-library@master', retriever: modernSCM(
         ]
 )
 
-@Library("jenkins-shared-library")
-
 def gv
 pipeline {
 
