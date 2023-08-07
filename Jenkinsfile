@@ -11,9 +11,9 @@ pipeline {
         maven 'maven-3.9'
     }
 
-    stages{
-    
-        stage("init"){
+    stages {
+
+        stage("init") {
             steps {
                 script {
 
@@ -24,27 +24,27 @@ pipeline {
         }
 
         stage("build jar") {
-    
+
             steps {
                 script {
-                  buildJar()
+                    buildJar()
                 }
             }
-    
+
         }
-    
+
         stage("build image") {
-    
+
             steps {
                 script {
-                   buildImage()
+                    buildImage 'diaa96/shopme'
                 }
             }
-    
+
         }
-    
+
         stage("deploy") {
-    
+
             steps {
                 script {
                     gv.deployApp()
