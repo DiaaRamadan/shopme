@@ -33,11 +33,15 @@ pipeline {
 
         }
 
-        stage("build image") {
+        stage("build and push image") {
 
             steps {
                 script {
-                    buildImage 'diaa96/shopme'
+                    dockerBuildImage 'diaa96/shopme:backend-1.0', './ShopmeWebParent/ShopmeBackend/'
+                    dockerBuildImage 'diaa96/shopme:frontend-1.0', './ShopmeWebParent/ShopmeFrontend/'
+                    dockerLogin()
+                    dockerPush 'diaa96/shopme:backend-1.0'
+                    dockerPush 'diaa96/shopme:frontend-1.0'
                 }
             }
 
