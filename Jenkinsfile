@@ -37,8 +37,8 @@ pipeline {
 
             steps {
                 script {
-                    dockerBuildImage 'diaa96/shopme:backend-1.0', './ShopmeWebParent/ShopmeBackend/'
-                    dockerBuildImage 'diaa96/shopme:frontend-1.0', './ShopmeWebParent/ShopmeFrontend/'
+                    buildImage 'diaa96/shopme:backend-1.0', './ShopmeWebParent/ShopmeBackend/'
+                    buildImage 'diaa96/shopme:frontend-1.0', './ShopmeWebParent/ShopmeFrontend/'
                     dockerLogin()
                     dockerPush 'diaa96/shopme:backend-1.0'
                     dockerPush 'diaa96/shopme:frontend-1.0'
