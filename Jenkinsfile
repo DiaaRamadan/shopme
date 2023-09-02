@@ -31,7 +31,7 @@ pipeline {
             steps{
                 script{
                     echo "Increment app version..."
-                    ssh 'mvn build-helper:parse-version versions:set \
+                    sh 'mvn build-helper:parse-version versions:set \
                         -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
                         versions:commit'
 
