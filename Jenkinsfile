@@ -23,11 +23,26 @@ pipeline {
             steps{
                 script{
                     echo "Increment app version..."
-                    incrementVersion './ShopmeWebParent/ShopmeBackend/'
-                    incrementVersion './ShopmeWebParent/ShopmeFrontend/'
+                    ssh """ 
+                    mvn -f ./ShopmeWebParent/ShopmeBackend/ build-helper:parse-version versions:set \
+                        -DnewVersion=\${parsedVersion.majorVersion}.\
+                        \${parsedVersion.minorVersion}.\
+                        \${parsedVersion.nextIncrementalVersion} \
+                        versions:commit
+                    """
 
-                    def backVersion = getPomVersion './ShopmeWebParent/ShopmeBackend/' 
-                    def frontVersion = getPomVersion './ShopmeWebParent/ShopmeFrontend/' 
+                    ssh """ 
+                    mvn -f ./ShopmeWebParent/ShopmeFrontend/ build-helper:parse-version versions:set \
+                        -DnewVersion=\${parsedVersion.majorVersion}.\
+                        \${parsedVersion.minorVersion}.\
+                        \${parsedVersion.nextIncrementalVersion} \
+                        versions:commit
+                    """
+                    
+                    def backMatcher = readFile('./ShopmeWebParent/ShopmeBackend/pom.xml')
+                    def frontMatcher = readFile('./ShopmeWebParent/ShopmeFrontend/pom.xml')
+                    def backVersion = backMatcher[0][1]
+                    def frontVersion = frontMatcher[0][1]
 
                     env.BACK_IMAGE = "$backVersion-$BUILD_NUMBER"
                     env.FRONT_IMAGE = "$frontVersion-$BUILD_NUMBER"
