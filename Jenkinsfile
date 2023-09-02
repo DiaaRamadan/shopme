@@ -34,8 +34,8 @@ pipeline {
                     ssh 'mvn build-helper:parse-version versions:set \
                         -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} versions:commit'
 
-                    def pomContent = readFile('pom.xml')
-                    def version = (pomContent =~ '<version>(.+)</version>')[0][1]
+                    def pomContent = readFile('pom.xml')  =~ '<version>(.+)</version>'
+                    def version = pomContent[0][1]
 
                     env.IMAGE_NAME = "$version-$BUILD_NUMBER"
                 }
