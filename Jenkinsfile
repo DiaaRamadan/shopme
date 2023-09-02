@@ -27,29 +27,23 @@ pipeline {
             }
        }
 
-     stage("Increment version") {
-        steps {
-            script {
-                echo "Increment app version..."
+        stage("Increment version"){
+            steps{
+                script{
+                    echo "Increment app version..."
+                    ssh 'mvn build-helper:parse-version versions:set \
+                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
+                        versions:commit'
 
-                // Run the Maven command to increment the version and commit the change
-                def mvnCommand = "mvn build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} versions:commit"
-                sh mvnCommand
+                    def pomContent = readFile('pom.xml')  =~ '<version>(.+)</version>'
+                    def version = pomContent[0][1]
 
-                // Read the updated version from the POM file
-                def pomContent = readFile('pom.xml')
-                def matcher = (pomContent =~ '<version>(.+)</version>')
-                def version = matcher[0][1]
+                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
 
-                // Set the IMAGE_NAME environment variable with the updated version
-                env.IMAGE_NAME = version
-
-                // Echo the updated version for verification
-                echo "Updated version: \${env.IMAGE_NAME}"
+                    echo "==== new image value ${IMAGE_NAME} ===="
+                }
             }
         }
-    }
-
 
         stage("build jar") {
 
