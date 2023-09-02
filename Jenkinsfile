@@ -26,33 +26,21 @@ pipeline {
                 }
             }
        }
-       
+
         stage("Increment version"){
             steps{
                 script{
                     echo "Increment app version..."
-                    ssh 'mvn -f ./ShopmeWebParent/ShopmeBackend/ build-helper:parse-version versions:set \
+                    ssh 'mvn build-helper:parse-version versions:set \
                         -DnewVersion=\${parsedVersion.majorVersion}.\
                         \${parsedVersion.minorVersion}.\
                         \${parsedVersion.nextIncrementalVersion} \
                         versions:commit'
 
-                    ssh'mvn -f ./ShopmeWebParent/ShopmeFrontend/ build-helper:parse-version versions:set \
-                        -DnewVersion=\${parsedVersion.majorVersion}.\
-                        \${parsedVersion.minorVersion}.\
-                        \${parsedVersion.nextIncrementalVersion} \
-                        versions:commit'
-                    
-                    def pomContent
+                    def pomContent = readFile('pom.xml')
+                    def version = (pomContent =~ '<version>(.+?)</version>')[0][1]
 
-                    pomContent = readFile('./ShopmeWebParent/ShopmeBackend/pom.xml')
-                    def backVersion = (pomContent =~ '<version>(.+?)</version>')[0][1]
-
-                    pomContent = readFile('./ShopmeWebParent/ShopmeFrontend/pom.xml')
-                    def frontVersion = (pomContent =~ '<version>(.+?)</version>')[0][1]
-
-                    env.BACK_IMAGE = "$backVersion-$BUILD_NUMBER"
-                    env.FRONT_IMAGE = "$frontVersion-$BUILD_NUMBER"
+                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
                 }
             }
         }
@@ -71,11 +59,11 @@ pipeline {
 
             steps {
                 script {
-                    buildImage "diaa96/shopme:backend-${BACK_IMAGE}", './ShopmeWebParent/ShopmeBackend/'
-                    buildImage "diaa96/shopme:frontend-${FRONT_IMAGE}", './ShopmeWebParent/ShopmeFrontend/'
+                    buildImage "diaa96/shopme:backend-${IMAGE_NAME}", './ShopmeWebParent/ShopmeBackend/'
+                    buildImage "diaa96/shopme:frontend-${IMAGE_NAME}", './ShopmeWebParent/ShopmeFrontend/'
                     dockerLogin()
-                    dockerPush "diaa96/shopme:backend-${BACK_IMAGE}"
-                    dockerPush "diaa96/shopme:frontend-${FRONT_IMAGE}"
+                    dockerPush "diaa96/shopme:backend-${IMAGE_NAME}"
+                    dockerPush "diaa96/shopme:frontend-${IMAGE_NAME}"
                 }
             }
 
