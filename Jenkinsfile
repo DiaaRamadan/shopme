@@ -18,12 +18,19 @@ pipeline {
 
     stages {
 
-        stage("init") {
-            steps {
-                script {
+      
+        stage("Increment version"){
+            steps{
+                script{
+                    echo "Increment app version..."
+                    incrementVersion './ShopmeWebParent/ShopmeBackend/'
+                    incrementVersion './ShopmeWebParent/ShopmeFrontend/'
 
-                    gv = load "script.groovy"
+                    def backVersion = getPomVersion './ShopmeWebParent/ShopmeBackend/' 
+                    def frontVersion = getPomVersion './ShopmeWebParent/ShopmeFrontend/' 
 
+                    env.BACK_IMAGE = "$backVersion-$BUILD_NUMBER"
+                    env.FRONT_IMAGE = "$frontVersion-$BUILD_NUMBER"
                 }
             }
         }
@@ -42,11 +49,11 @@ pipeline {
 
             steps {
                 script {
-                    buildImage 'diaa96/shopme:backend-1.0', './ShopmeWebParent/ShopmeBackend/'
-                    buildImage 'diaa96/shopme:frontend-1.0', './ShopmeWebParent/ShopmeFrontend/'
+                    buildImage "diaa96/shopme:backend-$BACK_IMAGE", './ShopmeWebParent/ShopmeBackend/'
+                    buildImage "diaa96/shopme:frontend-$FRONT_IMAGE", './ShopmeWebParent/ShopmeFrontend/'
                     dockerLogin()
-                    dockerPush 'diaa96/shopme:backend-1.0'
-                    dockerPush 'diaa96/shopme:frontend-1.0'
+                    dockerPush "diaa96/shopme:backend-$BACK_IMAGE"
+                    dockerPush "diaa96/shopme:frontend-$FRONT_IMAGE"
                 }
             }
 
