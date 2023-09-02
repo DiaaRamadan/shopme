@@ -39,8 +39,8 @@ pipeline {
                         versions:commit
                     """
                     
-                    def backMatcher = readFile('./ShopmeWebParent/ShopmeBackend/pom.xml') =~ '<version>(.+)</version>'
-                    def frontMatcher = readFile('./ShopmeWebParent/ShopmeFrontend/pom.xml') =~ '<version>(.+)</version>'
+                    def backMatcher = readFile('./ShopmeWebParent/ShopmeBackend/pom.xml') =~ '<version>(.+?)</version>'
+                    def frontMatcher = readFile('./ShopmeWebParent/ShopmeFrontend/pom.xml') =~ '<version>(.+?)</version>'
                     def backVersion = backMatcher[0][1]
                     def frontVersion = frontMatcher[0][1]
 
