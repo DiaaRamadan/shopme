@@ -32,7 +32,7 @@ pipeline {
                 script{
                     echo "Increment app version..."
                     ssh 'mvn build-helper:parse-version versions:set \
-                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} versions:commit'
+                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.newIncrementalVersion} versions:commit'
 
                     def pomContent = readFile('pom.xml')  =~ '<version>(.+)</version>'
                     def version = pomContent[0][1]
