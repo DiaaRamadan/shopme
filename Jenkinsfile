@@ -39,10 +39,13 @@ pipeline {
                         versions:commit
                     """
                     
-                    def backMatcher = readFile('./ShopmeWebParent/ShopmeBackend/pom.xml') =~ '<version>(.+?)</version>'
-                    def frontMatcher = readFile('./ShopmeWebParent/ShopmeFrontend/pom.xml') =~ '<version>(.+?)</version>'
-                    def backVersion = backMatcher[0][1]
-                    def frontVersion = frontMatcher[0][1]
+                    def pomContent
+
+                    pomContent = readFile('./ShopmeWebParent/ShopmeBackend/pom.xml')
+                    def backVersion = (pomContent =~ '<version>(.+?)</version>')[0][1]
+
+                    pomContent = readFile('./ShopmeWebParent/ShopmeFrontend/pom.xml')
+                    def frontVersion = (pomContent =~ '<version>(.+?)</version>')[0][1]
 
                     env.BACK_IMAGE = "$backVersion-$BUILD_NUMBER"
                     env.FRONT_IMAGE = "$frontVersion-$BUILD_NUMBER"
