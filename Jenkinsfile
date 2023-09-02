@@ -23,21 +23,17 @@ pipeline {
             steps{
                 script{
                     echo "Increment app version..."
-                    ssh """ 
-                    mvn -f ./ShopmeWebParent/ShopmeBackend/ build-helper:parse-version versions:set \
+                    ssh 'mvn -f ./ShopmeWebParent/ShopmeBackend/ build-helper:parse-version versions:set \
                         -DnewVersion=\${parsedVersion.majorVersion}.\
                         \${parsedVersion.minorVersion}.\
                         \${parsedVersion.nextIncrementalVersion} \
-                        versions:commit
-                    """
+                        versions:commit'
 
-                    ssh """ 
-                    mvn -f ./ShopmeWebParent/ShopmeFrontend/ build-helper:parse-version versions:set \
+                    ssh'mvn -f ./ShopmeWebParent/ShopmeFrontend/ build-helper:parse-version versions:set \
                         -DnewVersion=\${parsedVersion.majorVersion}.\
                         \${parsedVersion.minorVersion}.\
                         \${parsedVersion.nextIncrementalVersion} \
-                        versions:commit
-                    """
+                        versions:commit'
                     
                     def pomContent
 
