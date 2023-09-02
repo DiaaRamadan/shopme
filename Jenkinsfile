@@ -49,11 +49,11 @@ pipeline {
 
             steps {
                 script {
-                    buildImage "diaa96/shopme:backend-$BACK_IMAGE", './ShopmeWebParent/ShopmeBackend/'
-                    buildImage "diaa96/shopme:frontend-$FRONT_IMAGE", './ShopmeWebParent/ShopmeFrontend/'
+                    buildImage "diaa96/shopme:backend-${BACK_IMAGE}", './ShopmeWebParent/ShopmeBackend/'
+                    buildImage "diaa96/shopme:frontend-${FRONT_IMAGE}", './ShopmeWebParent/ShopmeFrontend/'
                     dockerLogin()
-                    dockerPush "diaa96/shopme:backend-$BACK_IMAGE"
-                    dockerPush "diaa96/shopme:frontend-$FRONT_IMAGE"
+                    dockerPush "diaa96/shopme:backend-${BACK_IMAGE}"
+                    dockerPush "diaa96/shopme:frontend-${FRONT_IMAGE}"
                 }
             }
 
